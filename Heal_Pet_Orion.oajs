@@ -1,0 +1,53 @@
+//Hestia
+function HealAllFriendlyPets()
+{
+    while(true){
+        const mobilesNearby = Orion.FindTypeEx(
+        '-1',
+        '-1',
+        'ground',
+        'mobile',
+        2,
+        'green|blue|innocent'
+        )
+    
+      //sadece listedeki arkadaşları filtrele
+        const friendsNearby = mobilesNearby.filter(function (mobile) {
+            return isFriend(mobile)
+        })
+    
+      //en düşük hp olan
+          friendsNearby.sort(function (e1, e2) {
+            return e1.Hits() - e2.Hits()
+          })
+        if (friendsNearby.length) {
+               const lowestHpFriend = friendsNearby[0];
+               if(lowestHpFriend.Hits()<lowestHpFriend.MaxHits()-2)
+                healTarget(lowestHpFriend);
+        }
+    }
+}
+
+function healTarget(lowestHpFriend)
+{
+    Orion.WaitTargetObject(lowestHpFriend.Serial());
+    Orion.UseType('0x0E21');
+    Orion.Print(55,'Bandaj Basılan Pet : ' + lowestHpFriend.Name());
+    Orion.ClearJournal();
+    var Timer = Orion.Now()+2250; var Msg = "Bandaj Basıldı.";
+    while (true) {
+        Orion.Wait(100);
+        if(Orion.InJournal(Msg) || Orion.Now() > Timer)
+            break;
+    }
+    Orion.ClearJournal(Msg);
+    Orion.Print(1225,Orion.Count('0x0E21',any,backpack) + ' Bandage Kaldı.');
+}
+
+function isFriend(mobileObj) {
+	const friendsList = Orion.GetFriendList()
+	if (friendsList.indexOf(mobileObj.Serial()) >= 0) {
+		return true
+	}
+	return false
+}
