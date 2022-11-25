@@ -1,0 +1,31 @@
+//Hestia
+function AttacktNextCreature()
+{
+    var creatures = Orion.FindTypeEx('0xFFFF','0xFFFF', ground, 'ignorefriends|ignoreself|inLOS|near|mobile',  '12', 'gray|criminal');
+	if (!creatures.length)
+	{
+		Orion.Print( '-1', 'no creature found, resetting ignore list');
+		Orion.IgnoreReset();
+		return '';
+	}
+    
+    Orion.Say("All Kill");
+    Orion.WaitTargetObject(creatures[0].Serial());
+    Orion.Wait(1000);
+    
+   var StartTime, DiscoSuccess='You play jarring music|in discord|cannot be seen';
+	StartTime=Orion.Now();
+	//Günlükte uyumsuzluk başarı mesajı bulunana kadar veya hedefin varlığı sona erene kadar veya 4 saniye boyunca denedikten sonra (muhtemelen uyumsuzluğun imkansız olduğu bir hedef) hedefi otomatik olarak karıştırır.
+	//veya hedef adı içinde 'para' veya 'vil' içeriyorsa (paragon veya evil etiketleri olan hedefleri uyumsuzlaştırmamak için).
+	while(!Orion.InJournal(DiscoSuccess,'my|sys',0,'0xFFFF',StartTime,0)){
+		Orion.WaitTargetObject(creatures[0].Serial());
+		Orion.UseSkill('Discordance');
+		Orion.Wait(1000);
+		Orion.CancelTarget();
+	}
+	while(Orion.ObjectExists(creatures[0].Serial())){
+		Orion.Wait(100);
+	}
+	Orion.Say("All Guard");
+
+}
