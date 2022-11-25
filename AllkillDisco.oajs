@@ -1,4 +1,3 @@
-//Hestia
 function AttacktNextCreature()
 {
     var creatures = Orion.FindTypeEx('0xFFFF','0xFFFF', ground, 'ignorefriends|ignoreself|inLOS|near|mobile',  '12', 'gray|criminal');
